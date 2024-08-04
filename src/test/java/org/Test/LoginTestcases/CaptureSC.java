@@ -1,5 +1,5 @@
-package org.Test;
+package org.Test.LoginTestcases;
 
 public class CaptureSC {
-    
+
 }

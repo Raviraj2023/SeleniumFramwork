@@ -1,49 +1,38 @@
-package org.Test;
+package org.Test.LoginTestcases;
 
 import org.OrangeHrms.Pages.Loginpage;
+import org.OrangeHrms.Utils.PropertyReder;
 import org.Test.TestBase.CommonTest;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
+import java.io.FileNotFoundException;
 
 import static org.OrangeHrms.Drivers.DriverManager.driver;
-
 public class TestLogin extends CommonTest {
-//    WebDriver driver;
-//
-//    @BeforeTest
-//    public void initiateBrowser(){
-//      driver =new ChromeDriver();
-//        driver.get("https://app.vwo.com/#/login");
-//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-//    }
-    @Test (enabled = false,priority = 1)
-    public void TestValidCredentionals(){
-
-        Loginpage lg=new Loginpage(driver);
+    private static final Logger logger = LogManager.getLogger(TestLogin.class);
+    Loginpage lg, lg1;
+    @Test(enabled = true, priority = 1)
+    public void TestValidCredentionals() throws FileNotFoundException {
+        lg = new Loginpage(driver);
+        logger.info(".......TestStarted......");
         driver.manage().window().maximize();
         lg.openVWOLoginURL();
         lg.waitsa();
-        String Successmessage=lg.LoginValidCredential("bhosaleravi9421@gmail.com", "Ravi@123");
-        Assert.assertEquals(Successmessage,"Hi Raviraj Bhosale, here's an overview of your experience optimization journey");
+        lg.LoginValidCredential(PropertyReder.readKey("UserName"), PropertyReder.readKey("Password"));
+        String Successmessage = lg.SuccessMessage.getText();
+        Assert.assertEquals(Successmessage, PropertyReder.readKey("SuccessMessage"));
+        logger.info(".......TestEnd......");
     }
-    @Test (enabled = true, priority = 2)
-    public void TestInValidCredentionals(){
-        Loginpage lg=new Loginpage(driver);
+    @Test(enabled = false, priority = 2)
+    public void TestInValidCredentionals() throws FileNotFoundException {
+        lg1 = new Loginpage(driver);
         driver.manage().window().maximize();
-        lg.openVWOLoginURL();
-        lg.waitsa();
-        String errormessage=lg.LoginInValidCredential("bhosaleravi9421@gmail.com", "Ravi@125");
-        Assert.assertEquals(errormessage,"Your email, password, IP address or location did not match");
+        lg1.openVWOLoginURL();
+        lg1.waitsa();
+        String er = lg1.LoginInValidCredential(PropertyReder.readKey("UserName"), PropertyReder.readKey("IPassword"));
+        Assert.assertEquals(er, PropertyReder.readKey("ErrorMessage"));
     }
-//    @AfterTest
-//    public void closesession(){
-////        driver.close();
-//        driver.quit();
-//    }
 }
